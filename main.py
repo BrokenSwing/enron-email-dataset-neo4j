@@ -35,9 +35,11 @@ def recipient_from_tuple(recipient_tuple):
     return recipient
 
 
-def file_path_to_model(filepath):
+def file_path_to_model(args):
+    filepath, repo = args
     parsed_mail = mailparser.parse_from_file(filepath)
     mail_model = convert_to_model(parsed_mail)
+    repo.save(mail_model)
     return mail_model
 
 
@@ -52,8 +54,7 @@ def main():
 
     processed_count = 0
     for root, dirs, files in os.walk("maildir"):
-        models = pool.map(file_path_to_model, [os.path.join(root, filepath) for filepath in files])
-        repo.save(*models)
+        pool.map(file_path_to_model, [(os.path.join(root, filepath), repo) for filepath in files])
         computed_now = len(files)
         processed_count += computed_now
         print("Processed {0} (+{1}) files. Continuing ...".format(processed_count, computed_now))
