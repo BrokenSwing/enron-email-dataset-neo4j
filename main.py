@@ -53,7 +53,7 @@ def main():
     pool = concurrent.futures.ThreadPoolExecutor()
 
     processed_count = 0
-    for root, dirs, files in os.walk("D:/Downloads/enron_mail_20150507.tar/enron_mail_20150507/maildir/allen-p/"):
+    for root, dirs, files in os.walk("maildir"):
         pool.map(file_path_to_model, [(os.path.join(root, filepath), repo) for filepath in files])
         computed_now = len(files)
         processed_count += computed_now
