@@ -2,7 +2,6 @@ import mailparser
 import itertools
 import os
 from models import Mail, Recipient
-import threading
 from py2neo.ogm import Repository
 import concurrent.futures
 
@@ -20,7 +19,7 @@ def convert_to_model(parsed_mail):
     mail.date = parsed_mail.date
     for recipient in recipients_from_list_of_tuples(parsed_mail.to, parsed_mail.cc, parsed_mail.bcc):
         mail.to.add(recipient)
-    mail.from_ = recipient_from_tuple(parsed_mail.from_[0])
+    mail.sender.add(recipient_from_tuple(parsed_mail.from_[0]))
     return mail
 
 
